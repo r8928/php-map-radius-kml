@@ -4,18 +4,19 @@ include 'radius.php';
 
 function doKML($state_name)
 {
-    include $state_name . '.php';
-
     $locations = json_decode(file_get_contents('json/' . $state_name . '.json'));
 
     $kml = new KmlTemplate(
         $state_name
     );
 
+    $kml->dontIncludeMarkers()
+        ->radiusColor('ff4f0e88', '1f4f0e88');
+
     foreach ($locations as $location) {
-        $kml->addPlacemark(
+        $kml->addPlacemarks(
             $location->name,
-            radius([$location->longitude, $location->latitude], 2),
+            radius([$location->longitude, $location->latitude], 1),
             [
                 'Phone' => $location->Phone,
                 'Street' => $location->Street,
@@ -36,3 +37,4 @@ $state = $_GET['state'] ??
     die('bad bad bad');
 
 doKML($state);
+die($_GET['state']);
